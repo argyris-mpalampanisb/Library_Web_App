@@ -1,0 +1,42 @@
+# ─── .NET Build Output ───────────────────────────────────────────
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+*.nupkg
+*.snupkg
+*.binlog
+
+# ─── Visual Studio ───────────────────────────────────────────────
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ─── Rider / VS Code ─────────────────────────────────────────────
+.idea/
+.vscode/
+
+# ─── OS Files ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Docker ──────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ─── Personal / Secrets ──────────────────────────────────────────
+DEVELOPER-NOTES.md
+appsettings.Development.json
+*.pem
+*.key
+
+# ─── NuGet ───────────────────────────────────────────────────────
+.nuget/
+packages/
+
+# ─── Test Results ────────────────────────────────────────────────
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx

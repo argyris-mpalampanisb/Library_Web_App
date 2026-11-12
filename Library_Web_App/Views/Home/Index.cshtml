@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4">📚 Welcome to the Library 📖</h1>
+    <p class="lead mt-3">
+        ✒️ Rent your favourite books, manage your account, and enjoy reading.
+    </p>
+    <hr />
+    <div class="mt-4">
+        <a asp-controller="Library" asp-action="Index" class="btn btn-primary btn-lg me-3">
+            📖 Go to Library
+        </a>
+        <a asp-controller="Accounts" asp-action="Index" class="btn btn-outline-primary btn-lg">
+            👤 My Account
+        </a>
+    </div>
+</div>   

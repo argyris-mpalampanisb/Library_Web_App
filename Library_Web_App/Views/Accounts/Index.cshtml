@@ -1,0 +1,33 @@
+﻿@model Library_Web_App.Models.AppUser
+@{
+    ViewData["Title"] = "My Account";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">👤 My Account</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Username</dt>
+                    <dd class="col-sm-8">@Model.Username</dd>
+
+                    <dt class="col-sm-4">Full Name</dt>
+                    <dd class="col-sm-8">@Model.FullName</dd>
+
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">@Model.Email</dd>
+
+                    <dt class="col-sm-4">Member Since</dt>
+                    <dd class="col-sm-8">@Model.CreatedAt.ToString("MMMM d, yyyy")</dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <a asp-action="Edit" class="btn btn-outline-primary btn-sm">✏️ Edit Profile</a>
+                <a asp-action="Delete" class="btn btn-outline-danger btn-sm">🗑️ Delete Account</a>
+            </div>
+        </div>
+    </div>
+</div>   

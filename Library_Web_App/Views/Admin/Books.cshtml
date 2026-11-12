@@ -1,0 +1,47 @@
+﻿@model List<Library_Web_App.Models.Book>
+@{
+    ViewData["Title"] = "Manage Books";
+}
+
+<h3>📚 Manage Books</h3>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td class="text-muted small">@book.Description</td>
+                    <td>
+                        <a asp-action="EditBook" asp-route-id="@book.Id" class="btn btn-outline-primary btn-sm">✏️ Edit</a>
+                        <form asp-action="DeleteBook" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@book.Id" />
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this book?')">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    <a asp-action="AddBook" class="btn btn-primary">➕ Add Book</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Dashboard</a>
+</div>   

@@ -1,0 +1,108 @@
+﻿@model List<Library_Web_App.Models.BookDisplayModel>
+@{
+    ViewData["Title"] = "Library";
+    var search = ViewBag.Search as string;
+    var currentPage = (int)ViewBag.Page;
+    var totalPages = (int)ViewBag.TotalPages;
+    var totalBooks = (int)ViewBag.TotalBooks;
+    var prevPage = currentPage - 1;
+    var nextPage = currentPage + 1;
+}
+
+<h3>📖 Library</h3>
+<p class="text-muted">Search, add to cart, and rent books. Each rental is valid for 5 days.</p>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="search" class="form-control" placeholder="Search by title or author..." value="@search" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">🔍 Search</button>
+    </div>
+    @if (!string.IsNullOrEmpty(search))
+    {
+        <div class="col-auto">
+            <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+        </div>
+    }
+</form>
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">No books found@(search != null ? $" for \"@search\"" : "").</p>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var book in Model)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <strong>@book.Title</strong> <span class="text-muted">by @book.Author</span>
+                    <p class="mb-0 mt-1 text-muted small">@book.Description</p>
+                    @if (book.OnLoan)
+                    {
+                        <span class="badge bg-warning text-dark mt-1">On Loan</span>
+                    }
+                    else if (book.InCart)
+                    {
+                        <span class="badge bg-info text-dark mt-1">In Cart</span>
+                    }
+                </div>
+                <div class="ms-3">
+                    @if (book.OnLoan)
+                    {
+                        <button class="btn btn-secondary btn-sm" disabled>Unavailable</button>
+                    }
+                    else if (book.InCart)
+                    {
+                        <form asp-action="RemoveFromCart" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="AddToCart" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                    <a class="page-link" href="/Library/Index?search=@(search ?? "")&pg=@prevPage">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="/Library/Index?search=@(search ?? "")&pg=@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                    <a class="page-link" href="/Library/Index?search=@(search ?? "")&pg=@nextPage">&raquo;</a>
+                </li>
+            </ul>
+            <p class="text-center text-muted small">@totalBooks book(s) found — Page @currentPage of @totalPages</p>
+        </nav>
+    }
+}
+
+<div class="mt-4 d-flex gap-2">
+    <a asp-action="Cart" class="btn btn-primary">🛒 View Cart</a>
+    <a asp-action="MyRentals" class="btn btn-outline-primary">📋 My Rentals</a>
+</div>   

@@ -1,0 +1,47 @@
+﻿@model Library_Web_App.Models.CartViewModel
+@{
+    ViewData["Title"] = "My Cart";
+}
+
+<h3>🛒 My Cart</h3>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (Model.Items.Count == 0)
+{
+    <p class="text-muted">Your cart is empty. <a asp-action="Index">Browse the library</a> to add books.</p>
+}
+else
+{
+    <div class="list-group mb-4">
+        @foreach (var item in Model.Items)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>@item.Book.Title</strong> <span class="text-muted">by @item.Book.Author</span>
+                </div>
+                <form asp-action="RemoveFromCart" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="bookId" value="@item.BookId" />
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                </form>
+            </div>
+        }
+    </div>
+
+    <form asp-action="Rent" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-success">📚 Rent All (@Model.Items.Count book(s) — 5 days each)</button>
+    </form>
+}
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-outline-secondary">← Back to Library</a>
+</div>   

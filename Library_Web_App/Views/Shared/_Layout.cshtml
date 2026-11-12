@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Library Web App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">📚 Library</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Library" asp-action="Index">Library</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Library" asp-action="MyRentals">My Rentals</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Accounts" asp-action="Index">My Account</a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">⚙️ Admin</a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Accounts" asp-action="Login">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Accounts" asp-action="Register">Register</a>
+                        </li>
+                    }
+                </ul>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-controller="Accounts" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            Logout (@User.Identity!.Name)
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>   

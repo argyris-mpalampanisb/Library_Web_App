@@ -1,0 +1,83 @@
+﻿@model Library_Web_App.Models.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h3>📊 Admin Dashboard</h3>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">👤 Users</h5>
+                <p class="display-6">@Model.TotalUsers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">📚 Books</h5>
+                <p class="display-6">@Model.TotalBooks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">📋 Active Rentals</h5>
+                <p class="display-6">@Model.ActiveRentals</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Rentals — Past 7 Days</h4>
+<div class="card shadow-sm mt-3">
+    <div class="card-body">
+        <canvas id="rentalChart" height="120"></canvas>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <a asp-action="Books" class="btn btn-primary">📚 Manage Books</a>
+    <a asp-action="Users" class="btn btn-outline-primary">👤 Manage Users</a>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script>
+        const ctx = document.getElementById('rentalChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartData.Select(c => c.BookTitle))),
+                datasets: [
+                    {
+                        label: 'Rental Count',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartData.Select(c => c.RentalCount))),
+                        backgroundColor: 'rgba(13, 110, 253, 0.6)',
+                        borderColor: 'rgb(13, 110, 253)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Total Days Rented',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartData.Select(c => c.DaysRented))),
+                        backgroundColor: 'rgba(255, 193, 7, 0.6)',
+                        borderColor: 'rgb(255, 193, 7)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    </script>
+}

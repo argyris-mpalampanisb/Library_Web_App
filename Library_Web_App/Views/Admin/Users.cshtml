@@ -1,0 +1,77 @@
+﻿@model Library_Web_App.Models.AdminUserViewModel
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h3>👤 Manage Users</h3>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Joined</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr class="@(user.IsBanned ? "table-danger" : "")">
+                    <td>@user.Username @(user.IsAdmin ? "👑" : "")</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.CreatedAt.ToString("MMM d, yyyy")</td>
+                    <td>
+                        @if (user.IsBanned)
+                        {
+                            <span class="badge bg-danger">Banned</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!user.IsAdmin)
+                        {
+                            @if (user.IsBanned)
+                            {
+                                <form asp-action="RestoreUser" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn btn-outline-success btn-sm">✅ Restore</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="BanUser" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Ban this user?')">🚫 Ban</button>
+                                </form>
+                            }
+                            <form asp-action="DeleteUser" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@user.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Permanently delete this user and all their data?')">🗑️</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-outline-secondary">← Dashboard</a>
+</div>   
